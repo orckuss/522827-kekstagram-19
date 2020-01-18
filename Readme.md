@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Дмитрий Васильев](https://up.htmlacademy.ru/javascript/19/user/522827).
-* Наставник: `Неизвестно`.
+* Наставник: [Леонид Дугенец](https://htmlacademy.ru/profile/laokree).
 
 ---
 
