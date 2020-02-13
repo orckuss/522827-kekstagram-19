@@ -95,3 +95,258 @@ function renderPhotos(photos) {
 }
 
 renderPhotos(generatePhotos(PHOTOS_COUNT));
+
+// Открытие/закрытие формы, установка фильтров. Надо будет разбить и отрефакторить
+(function () {
+  var FILTER_MAP = {
+    'effect-none': '',
+    'effect-chrome': 'effects__preview--chrome',
+    'effect-sepia': 'effects__preview--sepia',
+    'effect-marvin': 'effects__preview--marvin',
+    'effect-phobos': 'effects__preview--phobos',
+    'effect-heat': 'effects__preview--heat',
+  };
+
+  var uploadFile = document.querySelector('#upload-file');
+  var editForm = document.querySelector('.img-upload__overlay');
+  var closeBtn = editForm.querySelector('#upload-cancel');
+  var effectsRadio = editForm.querySelectorAll('.effects__radio');
+  var imgUploadPreview = editForm.querySelector('.img-upload__preview');
+  var effectLevelPin = editForm.querySelector('.effect-level__pin');
+
+  var currentFilter = FILTER_MAP['effect-none'];
+
+  uploadFile.addEventListener('change', function () {
+    showEditForm();
+  });
+
+  closeBtn.addEventListener('click', function () {
+    closeEditForm();
+  });
+
+  function showEditForm() {
+    document.querySelector('body')
+      .classList.add('modal-open');
+    editForm.classList.remove('hidden');
+
+    setDefaultEditFormState();
+
+    document.addEventListener('keydown', onEscPressed);
+  }
+
+  function closeEditForm() {
+    document.querySelector('body')
+      .classList.remove('modal-open');
+    editForm.classList.add('hidden');
+
+    document.removeEventListener('keydown', onEscPressed);
+  }
+
+  function onEscPressed(evt) {
+    var hashTagField = document.querySelector('.text__hashtags');
+    var commentsField = document.querySelector('.text__description');
+
+    if (
+      (evt.key === 'Escape') &&
+      (evt.target !== hashTagField) &&
+      (evt.target !== commentsField)
+    ) {
+      closeEditForm();
+      uploadFile.value = '';
+    }
+  }
+
+  function setDefaultEditFormState() {
+    effectsRadio[0].checked = true;
+    changeFilter(FILTER_MAP['effect-none']);
+    hideEffectLevelSlider();
+  }
+
+  effectsRadio.forEach(function (element) {
+    element.addEventListener('change', function () {
+      changeFilter(FILTER_MAP[element.id]);
+      setEffectIntensity(100);
+
+      showEffectLevelSlider();
+
+      if (element.id === 'effect-none') {
+        hideEffectLevelSlider();
+      }
+    });
+  });
+
+  function changeFilter(filter) {
+    if (currentFilter) {
+      imgUploadPreview.classList
+        .remove(currentFilter);
+    }
+
+    if (filter) {
+
+      imgUploadPreview.classList
+        .add(filter);
+    }
+
+    currentFilter = filter;
+  }
+
+  function hideEffectLevelSlider() {
+    editForm.querySelector('.img-upload__effect-level')
+      .classList.add('hidden');
+  }
+
+  function showEffectLevelSlider() {
+    editForm.querySelector('.img-upload__effect-level')
+      .classList.remove('hidden');
+  }
+
+  effectLevelPin.addEventListener('mouseup', function () {
+    var elementLeft = effectLevelPin.offsetLeft;
+    var parrentWidth = effectLevelPin.parentElement.offsetWidth;
+    var proportion = Math.round(elementLeft / parrentWidth * 100);
+
+    setEffectIntensity(proportion);
+  });
+
+  function setEffectIntensity(proportion) {
+    imgUploadPreview.style.filter = null;
+
+    if (imgUploadPreview.classList.contains(FILTER_MAP['effect-chrome'])) {
+      changeGrayscale(imgUploadPreview, proportion);
+    }
+
+    if (imgUploadPreview.classList.contains(FILTER_MAP['effect-sepia'])) {
+      changeSepia(imgUploadPreview, proportion);
+    }
+
+    if (imgUploadPreview.classList.contains(FILTER_MAP['effect-marvin'])) {
+      changeInvert(imgUploadPreview, proportion);
+    }
+
+    if (imgUploadPreview.classList.contains(FILTER_MAP['effect-phobos'])) {
+      changeBlur(imgUploadPreview, proportion);
+    }
+
+    if (imgUploadPreview.classList.contains(FILTER_MAP['effect-heat'])) {
+      changeBrightness(imgUploadPreview, proportion);
+    }
+  }
+
+  function changeGrayscale(element, value) {
+    element.style.filter = 'grayscale(' + value / 100 + ')';
+  }
+
+  function changeSepia(element, value) {
+    element.style.filter = 'sepia(' + value / 100 + ')';
+  }
+
+  function changeInvert(element, value) {
+    element.style.filter = 'invert(' + value + '%)';
+  }
+
+  function changeBlur(element, value) {
+    element.style.filter = 'blur(' + value / 100 * 3 + 'px)';
+  }
+
+  function changeBrightness(element, value) {
+    element.style.filter = 'brightness(' + value / 100 * 3 + ')';
+  }
+
+})();
+
+// Настройка масштаба
+(function () {
+  var MIN_SCALE_VALUE = 25;
+  var MAX_SCALE_VALUE = 100;
+  var SCALE_SHIFT = 25;
+  var DEFAULT_SCALE_VALUE = 100;
+
+  var imgUploadPreview = document.querySelector('.img-upload__preview');
+  var scaleControlSmaller = document.querySelector('.scale__control--smaller');
+  var scaleControlBigger = document.querySelector('.scale__control--bigger');
+  var scaleControlValue = document.querySelector('.scale__control--value');
+  var currentScaleValue = DEFAULT_SCALE_VALUE;
+
+  setDefaultScaleValue();
+
+  scaleControlSmaller.addEventListener('click', function () {
+    decreaseScaleValue();
+    setScaleValue(currentScaleValue);
+  });
+
+  scaleControlBigger.addEventListener('click', function () {
+    increaseScaleValue();
+    setScaleValue(currentScaleValue);
+  });
+
+  scaleControlValue.addEventListener('click', function () {
+    setDefaultScaleValue();
+  });
+
+  function setScaleValue(scaleValue) {
+    scaleControlValue.value = scaleValue + '%';
+    setScale(scaleValue);
+  }
+
+  function setScale(value) {
+    value = value / 100;
+    imgUploadPreview.style.transform = 'scale(' + value + ')';
+  }
+
+  function setDefaultScaleValue() {
+    currentScaleValue = DEFAULT_SCALE_VALUE;
+    setScaleValue(DEFAULT_SCALE_VALUE);
+  }
+
+  function increaseScaleValue() {
+    if (currentScaleValue < MAX_SCALE_VALUE) {
+      currentScaleValue += SCALE_SHIFT;
+    }
+  }
+
+  function decreaseScaleValue() {
+    if (currentScaleValue > MIN_SCALE_VALUE) {
+      currentScaleValue -= SCALE_SHIFT;
+    }
+  }
+
+})();
+
+// Валидация хештегов и комментариев
+(function () {
+  var MAX_HASHTAGS_COUNT = 5;
+  var MAX_HASHTAG_LENGTH = 20;
+
+  var hashTagField = document.querySelector('.text__hashtags');
+
+  hashTagField.addEventListener('input', function () {
+    var hashTags = hashTagField.value.split(' ');
+
+    limitsEnteringTagsCount(hashTags, MAX_HASHTAGS_COUNT);
+
+    checkUniqueHashTag(hashTags);
+
+  });
+
+  function limitsEnteringTagsCount(hashTags, max) {
+    if (hashTags.length > max) {
+      hashTags.pop();
+    }
+    hashTagField.value = hashTags.join(' ');
+  }
+
+  function checkUniqueHashTag(hashTags) {
+    hashTags = hashTags.map(function (hashTag) {
+      return hashTag.toLowerCase();
+    });
+    console.log(hashTags);
+  }
+
+  function checkCustomValidation(value) {
+    hashTags.forEach(function (hashTag) {
+      checkCustomValidation(hashTag);
+    });
+    console.log(value);
+  }
+
+})();
