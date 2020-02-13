@@ -314,39 +314,54 @@ renderPhotos(generatePhotos(PHOTOS_COUNT));
 
 // Валидация хештегов и комментариев
 (function () {
-  var MAX_HASHTAGS_COUNT = 5;
+  var MAX_HASHTAGS_AMOUNT = 5;
   var MAX_HASHTAG_LENGTH = 20;
 
   var hashTagField = document.querySelector('.text__hashtags');
 
-  hashTagField.addEventListener('input', function () {
-    var hashTags = hashTagField.value.split(' ');
+  hashTagField.addEventListener('change', function () {
+    var hashTags = hashTagField.value.split(' ')
+      .filter(function (hashTag) {
+        return hashTag !== '';
+      });
+    hashTagField.value = hashTags.join(' ');
 
-    limitsEnteringTagsCount(hashTags, MAX_HASHTAGS_COUNT);
+    hashTagField.setCustomValidity('');
 
-    checkUniqueHashTag(hashTags);
+    checkAmountTags(hashTags, MAX_HASHTAGS_AMOUNT);
+    checkTagLength(hashTags, MAX_HASHTAG_LENGTH);
+    checkUniqueTag(hashTags);
 
   });
 
-  function limitsEnteringTagsCount(hashTags, max) {
+  function checkAmountTags(hashTags, max) {
     if (hashTags.length > max) {
-      hashTags.pop();
+      hashTagField.setCustomValidity('Amount of tags is not allowed more then ' + max + ' tags');
     }
-    hashTagField.value = hashTags.join(' ');
   }
 
-  function checkUniqueHashTag(hashTags) {
+  function checkTagLength(hashTags, max) {
+    var tooLongTag = hashTags.find(function (hashTag) {
+      return hashTag.length > max;
+    });
+
+    if (tooLongTag) {
+      hashTagField.setCustomValidity(tooLongTag + 'is not allowed more then ' + max + ' symbols');
+    }
+  }
+
+  function checkUniqueTag(hashTags) {
     hashTags = hashTags.map(function (hashTag) {
       return hashTag.toLowerCase();
     });
-    console.log(hashTags);
-  }
 
-  function checkCustomValidation(value) {
-    hashTags.forEach(function (hashTag) {
-      checkCustomValidation(hashTag);
+    var notUnique = hashTags.find(function (hashTag, index, currentArray) {
+      return currentArray.includes(hashTag, index + 1);
     });
-    console.log(value);
+
+    if (notUnique) {
+      hashTagField.setCustomValidity(notUnique + ' is not unique');
+    }
   }
 
 })();
