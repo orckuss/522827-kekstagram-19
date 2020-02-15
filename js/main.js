@@ -316,6 +316,8 @@ renderPhotos(generatePhotos(PHOTOS_COUNT));
 (function () {
   var MAX_HASHTAGS_AMOUNT = 5;
   var MAX_HASHTAG_LENGTH = 20;
+  var HASH_TAG_PATTERN = /(^|\s)(#[a-zа-яё\d]+)/i;
+  var NOT_LITERAL_NUMERAL_PATTERN = /[^a-zа-яё\d]/i;
 
   var hashTagField = document.querySelector('.text__hashtags');
 
@@ -328,11 +330,24 @@ renderPhotos(generatePhotos(PHOTOS_COUNT));
 
     hashTagField.setCustomValidity('');
 
+    checkHashTagPattern(hashTags);
     checkAmountTags(hashTags, MAX_HASHTAGS_AMOUNT);
     checkTagLength(hashTags, MAX_HASHTAG_LENGTH);
     checkUniqueTag(hashTags);
-
   });
+
+  function checkHashTagPattern(hashTags) {
+    var wrongHashTag = hashTags.find(function (hashTag) {
+      var match = HASH_TAG_PATTERN.test(hashTag);
+      var mismatch = NOT_LITERAL_NUMERAL_PATTERN.test(hashTag.slice(1));
+
+      return (!match || mismatch);
+    });
+
+    if (wrongHashTag) {
+      hashTagField.setCustomValidity(wrongHashTag + ' is not allowed #HashTag');
+    }
+  }
 
   function checkAmountTags(hashTags, max) {
     if (hashTags.length > max) {
@@ -346,7 +361,7 @@ renderPhotos(generatePhotos(PHOTOS_COUNT));
     });
 
     if (tooLongTag) {
-      hashTagField.setCustomValidity(tooLongTag + 'is not allowed more then ' + max + ' symbols');
+      hashTagField.setCustomValidity(tooLongTag + ' is not allowed more then ' + max + ' symbols');
     }
   }
 
