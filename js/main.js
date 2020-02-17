@@ -112,8 +112,9 @@ renderPhotos(generatePhotos(PHOTOS_COUNT));
   var editForm = document.querySelector('.img-upload__overlay');
   var closeBtn = editForm.querySelector('#upload-cancel');
   var effectsRadio = editForm.querySelectorAll('.effects__radio');
-  var imgUploadPreview = editForm.querySelector('.img-upload__preview');
-  var effectLevelPin = editForm.querySelector('.effect-level__pin');
+  var imgPreview = editForm.querySelector('.img-upload__preview');
+  var effectSlider = editForm.querySelector('.img-upload__effect-level');
+  var effectLevelPin = effectSlider.querySelector('.effect-level__pin');
 
   var currentFilter = FILTER_MAP['effect-none'];
 
@@ -159,45 +160,37 @@ renderPhotos(generatePhotos(PHOTOS_COUNT));
   function setDefaultEditFormState() {
     effectsRadio[0].checked = true;
     changeFilter(FILTER_MAP['effect-none']);
-    hideEffectLevelSlider();
+    setVisibilitySlider('effect-none');
   }
 
   effectsRadio.forEach(function (element) {
     element.addEventListener('change', function () {
       changeFilter(FILTER_MAP[element.id]);
       setEffectIntensity(100);
-
-      showEffectLevelSlider();
-
-      if (element.id === 'effect-none') {
-        hideEffectLevelSlider();
-      }
+      setVisibilitySlider(element.id);
     });
   });
 
   function changeFilter(filter) {
     if (currentFilter) {
-      imgUploadPreview.classList
-        .remove(currentFilter);
+      imgPreview.classList.remove(currentFilter);
     }
 
     if (filter) {
-
-      imgUploadPreview.classList
-        .add(filter);
+      imgPreview.classList.add(filter);
     }
 
     currentFilter = filter;
   }
 
-  function hideEffectLevelSlider() {
-    editForm.querySelector('.img-upload__effect-level')
-      .classList.add('hidden');
-  }
+  function setVisibilitySlider(effectName) {
+    if (effectSlider.classList.contains('hidden')) {
+      effectSlider.classList.remove('hidden');
+    }
 
-  function showEffectLevelSlider() {
-    editForm.querySelector('.img-upload__effect-level')
-      .classList.remove('hidden');
+    if (effectName === 'effect-none') {
+      effectSlider.classList.add('hidden');
+    }
   }
 
   effectLevelPin.addEventListener('mouseup', function () {
@@ -209,47 +202,19 @@ renderPhotos(generatePhotos(PHOTOS_COUNT));
   });
 
   function setEffectIntensity(proportion) {
-    imgUploadPreview.style.filter = null;
-
-    if (imgUploadPreview.classList.contains(FILTER_MAP['effect-chrome'])) {
-      changeGrayscale(imgUploadPreview, proportion);
+    if (imgPreview.classList.contains(FILTER_MAP['effect-chrome'])) {
+      imgPreview.style.filter = 'grayscale(' + proportion / 100 + ')';
+    } else if (imgPreview.classList.contains(FILTER_MAP['effect-sepia'])) {
+      imgPreview.style.filter = 'sepia(' + proportion / 100 + ')';
+    } else if (imgPreview.classList.contains(FILTER_MAP['effect-marvin'])) {
+      imgPreview.style.filter = 'invert(' + proportion + '%)';
+    } else if (imgPreview.classList.contains(FILTER_MAP['effect-phobos'])) {
+      imgPreview.style.filter = 'blur(' + proportion / 100 * 3 + 'px)';
+    } else if (imgPreview.classList.contains(FILTER_MAP['effect-heat'])) {
+      imgPreview.style.filter = 'brightness(' + proportion / 100 * 3 + ')';
+    } else {
+      imgPreview.style.filter = null;
     }
-
-    if (imgUploadPreview.classList.contains(FILTER_MAP['effect-sepia'])) {
-      changeSepia(imgUploadPreview, proportion);
-    }
-
-    if (imgUploadPreview.classList.contains(FILTER_MAP['effect-marvin'])) {
-      changeInvert(imgUploadPreview, proportion);
-    }
-
-    if (imgUploadPreview.classList.contains(FILTER_MAP['effect-phobos'])) {
-      changeBlur(imgUploadPreview, proportion);
-    }
-
-    if (imgUploadPreview.classList.contains(FILTER_MAP['effect-heat'])) {
-      changeBrightness(imgUploadPreview, proportion);
-    }
-  }
-
-  function changeGrayscale(element, value) {
-    element.style.filter = 'grayscale(' + value / 100 + ')';
-  }
-
-  function changeSepia(element, value) {
-    element.style.filter = 'sepia(' + value / 100 + ')';
-  }
-
-  function changeInvert(element, value) {
-    element.style.filter = 'invert(' + value + '%)';
-  }
-
-  function changeBlur(element, value) {
-    element.style.filter = 'blur(' + value / 100 * 3 + 'px)';
-  }
-
-  function changeBrightness(element, value) {
-    element.style.filter = 'brightness(' + value / 100 * 3 + ')';
   }
 
 })();
