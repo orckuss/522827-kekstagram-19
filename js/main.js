@@ -98,15 +98,6 @@ renderPhotos(generatePhotos(PHOTOS_COUNT));
 
 // Открытие/закрытие формы, установка фильтров. Надо будет разбить и отрефакторить
 (function () {
-  var FILTER_MAP = {
-    'effect-none': '',
-    'effect-chrome': 'effects__preview--chrome',
-    'effect-sepia': 'effects__preview--sepia',
-    'effect-marvin': 'effects__preview--marvin',
-    'effect-phobos': 'effects__preview--phobos',
-    'effect-heat': 'effects__preview--heat',
-  };
-
   var uploadFile = document.querySelector('#upload-file');
   var pageBody = document.querySelector('body');
   var editForm = document.querySelector('.img-upload__overlay');
@@ -116,7 +107,7 @@ renderPhotos(generatePhotos(PHOTOS_COUNT));
   var effectSlider = editForm.querySelector('.img-upload__effect-level');
   var effectLevelPin = effectSlider.querySelector('.effect-level__pin');
 
-  var currentFilter = FILTER_MAP['effect-none'];
+  var currentFilter;
 
   uploadFile.addEventListener('change', onFileUpload);
 
@@ -124,7 +115,6 @@ renderPhotos(generatePhotos(PHOTOS_COUNT));
 
   function onFileUpload() {
     showEditForm();
-    setDefaultEditFormState();
   }
 
   function onCloseButtonClick() {
@@ -157,15 +147,9 @@ renderPhotos(generatePhotos(PHOTOS_COUNT));
     document.removeEventListener('keydown', onEscPressed);
   }
 
-  function setDefaultEditFormState() {
-    effectsRadio[0].checked = true;
-    changeFilter(FILTER_MAP['effect-none']);
-    setVisibilitySlider('effect-none');
-  }
-
   effectsRadio.forEach(function (element) {
-    element.addEventListener('change', function () {
-      changeFilter(FILTER_MAP[element.id]);
+    element.addEventListener('change', function (evt) {
+      changeFilter('effects__preview--' + evt.target.value);
       setEffectIntensity(100);
       setVisibilitySlider(element.id);
     });
@@ -202,15 +186,15 @@ renderPhotos(generatePhotos(PHOTOS_COUNT));
   });
 
   function setEffectIntensity(proportion) {
-    if (imgPreview.classList.contains(FILTER_MAP['effect-chrome'])) {
+    if (imgPreview.classList.contains('effects__preview--chrome')) {
       imgPreview.style.filter = 'grayscale(' + proportion / 100 + ')';
-    } else if (imgPreview.classList.contains(FILTER_MAP['effect-sepia'])) {
+    } else if (imgPreview.classList.contains('effects__preview--sepia')) {
       imgPreview.style.filter = 'sepia(' + proportion / 100 + ')';
-    } else if (imgPreview.classList.contains(FILTER_MAP['effect-marvin'])) {
+    } else if (imgPreview.classList.contains('effects__preview--marvin')) {
       imgPreview.style.filter = 'invert(' + proportion + '%)';
-    } else if (imgPreview.classList.contains(FILTER_MAP['effect-phobos'])) {
+    } else if (imgPreview.classList.contains('effects__preview--phobos')) {
       imgPreview.style.filter = 'blur(' + proportion / 100 * 3 + 'px)';
-    } else if (imgPreview.classList.contains(FILTER_MAP['effect-heat'])) {
+    } else if (imgPreview.classList.contains('effects__preview--heat')) {
       imgPreview.style.filter = 'brightness(' + proportion / 100 * 3 + ')';
     } else {
       imgPreview.style.filter = null;
