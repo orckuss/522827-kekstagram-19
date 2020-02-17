@@ -262,52 +262,30 @@ renderPhotos(generatePhotos(PHOTOS_COUNT));
   var DEFAULT_SCALE_VALUE = 100;
 
   var imgUploadPreview = document.querySelector('.img-upload__preview');
-  var scaleControlSmaller = document.querySelector('.scale__control--smaller');
-  var scaleControlBigger = document.querySelector('.scale__control--bigger');
-  var scaleControlValue = document.querySelector('.scale__control--value');
+  var scaleSmallerButton = document.querySelector('.scale__control--smaller');
+  var scaleBiggerButton = document.querySelector('.scale__control--bigger');
+  var scaleValueField = document.querySelector('.scale__control--value');
   var currentScaleValue = DEFAULT_SCALE_VALUE;
 
-  setDefaultScaleValue();
+  setScaleValue(DEFAULT_SCALE_VALUE);
 
-  scaleControlSmaller.addEventListener('click', function () {
-    decreaseScaleValue();
-    setScaleValue(currentScaleValue);
+  scaleSmallerButton.addEventListener('click', function () {
+    if (currentScaleValue > MIN_SCALE_VALUE) {
+      currentScaleValue -= SCALE_SHIFT;
+      setScaleValue(currentScaleValue);
+    }
   });
 
-  scaleControlBigger.addEventListener('click', function () {
-    increaseScaleValue();
-    setScaleValue(currentScaleValue);
-  });
-
-  scaleControlValue.addEventListener('click', function () {
-    setDefaultScaleValue();
+  scaleBiggerButton.addEventListener('click', function () {
+    if (currentScaleValue < MAX_SCALE_VALUE) {
+      currentScaleValue += SCALE_SHIFT;
+      setScaleValue(currentScaleValue);
+    }
   });
 
   function setScaleValue(scaleValue) {
-    scaleControlValue.value = scaleValue + '%';
-    setScale(scaleValue);
-  }
-
-  function setScale(value) {
-    value = value / 100;
-    imgUploadPreview.style.transform = 'scale(' + value + ')';
-  }
-
-  function setDefaultScaleValue() {
-    currentScaleValue = DEFAULT_SCALE_VALUE;
-    setScaleValue(DEFAULT_SCALE_VALUE);
-  }
-
-  function increaseScaleValue() {
-    if (currentScaleValue < MAX_SCALE_VALUE) {
-      currentScaleValue += SCALE_SHIFT;
-    }
-  }
-
-  function decreaseScaleValue() {
-    if (currentScaleValue > MIN_SCALE_VALUE) {
-      currentScaleValue -= SCALE_SHIFT;
-    }
+    scaleValueField.value = scaleValue + '%';
+    imgUploadPreview.style.transform = 'scale(' + scaleValue / 100 + ')';
   }
 
 })();
