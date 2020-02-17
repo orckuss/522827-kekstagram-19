@@ -108,6 +108,7 @@ renderPhotos(generatePhotos(PHOTOS_COUNT));
   };
 
   var uploadFile = document.querySelector('#upload-file');
+  var pageBody = document.querySelector('body');
   var editForm = document.querySelector('.img-upload__overlay');
   var closeBtn = editForm.querySelector('#upload-cancel');
   var effectsRadio = editForm.querySelectorAll('.effects__radio');
@@ -116,30 +117,17 @@ renderPhotos(generatePhotos(PHOTOS_COUNT));
 
   var currentFilter = FILTER_MAP['effect-none'];
 
-  uploadFile.addEventListener('change', function () {
+  uploadFile.addEventListener('change', onFileUpload);
+
+  closeBtn.addEventListener('click', onCloseButtonClick);
+
+  function onFileUpload() {
     showEditForm();
-  });
-
-  closeBtn.addEventListener('click', function () {
-    closeEditForm();
-  });
-
-  function showEditForm() {
-    document.querySelector('body')
-      .classList.add('modal-open');
-    editForm.classList.remove('hidden');
-
     setDefaultEditFormState();
-
-    document.addEventListener('keydown', onEscPressed);
   }
 
-  function closeEditForm() {
-    document.querySelector('body')
-      .classList.remove('modal-open');
-    editForm.classList.add('hidden');
-
-    document.removeEventListener('keydown', onEscPressed);
+  function onCloseButtonClick() {
+    closeEditForm();
   }
 
   function onEscPressed(evt) {
@@ -154,6 +142,18 @@ renderPhotos(generatePhotos(PHOTOS_COUNT));
       closeEditForm();
       uploadFile.value = '';
     }
+  }
+
+  function showEditForm() {
+    pageBody.classList.add('modal-open');
+    editForm.classList.remove('hidden');
+    document.addEventListener('keydown', onEscPressed);
+  }
+
+  function closeEditForm() {
+    pageBody.classList.remove('modal-open');
+    editForm.classList.add('hidden');
+    document.removeEventListener('keydown', onEscPressed);
   }
 
   function setDefaultEditFormState() {
