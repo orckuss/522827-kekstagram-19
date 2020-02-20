@@ -29,7 +29,6 @@ var COMMENTS_AUTHORS_MOCK = [
 var createdPhotos = generatePhotos(PHOTOS_COUNT);
 var bigPicture = document.querySelector('.big-picture');
 var body = document.querySelector('body');
-var socialComments = document.querySelector('.social__comments');
 
 function generatePhotos(count) {
   var photos = [];
@@ -337,10 +336,12 @@ renderPhotos();
 
 function showBigPicture(photo) {
   bigPicture.classList.remove('hidden');
+
   bigPicture.querySelector('.social__comment-count')
     .classList.add('hidden');
   bigPicture.querySelector('.comments-loader')
     .classList.add('hidden');
+
   body.classList.add('modal-open');
 
   bigPicture.querySelector('.big-picture__img img')
@@ -357,23 +358,27 @@ function showBigPicture(photo) {
 }
 
 function renderComments(comments) {
+  var socialComments = document.querySelector('.social__comments');
+  var socialComment = socialComments.querySelector('.social__comment');
   var fragment = document.createDocumentFragment();
 
   comments.forEach(function (comment) {
-    var newComment = socialComments.querySelector('.social__comment')
-      .cloneNode(true);
-
-    var avatar = newComment.querySelector('.social__picture');
-    var commentText = newComment.querySelector('.social__text');
-
-    avatar.src = comment.avatar;
-    avatar.alt = comment.name;
-    commentText.textContent = comment.message;
-
-    fragment.appendChild(newComment);
+    fragment.appendChild(createNewComment(socialComment, comment));
   });
 
   socialComments.replaceWith(fragment);
+}
+
+function createNewComment(comment, commentData) {
+  var newComment = comment.cloneNode(true);
+  var avatar = newComment.querySelector('.social__picture');
+  var commentText = newComment.querySelector('.social__text');
+
+  avatar.src = commentData.avatar;
+  avatar.alt = commentData.name;
+  commentText.textContent = commentData.message;
+
+  return newComment;
 }
 
 showBigPicture(createdPhotos[0]);
