@@ -26,6 +26,10 @@ var COMMENTS_AUTHORS_MOCK = [
   'Твой кошмар',
 ];
 
+var createdPhotos = generatePhotos(PHOTOS_COUNT);
+var bigPicture = document.querySelector('.big-picture');
+var body = document.querySelector('body');
+
 function generatePhotos(count) {
   var photos = [];
 
@@ -83,11 +87,11 @@ function createPhotoELementFromTemplate(photo) {
   return photoElement;
 }
 
-function renderPhotos(photos) {
+function renderPhotos() {
   var pictures = document.querySelector('.pictures');
   var fragment = document.createDocumentFragment();
 
-  photos.forEach(function (photo) {
+  createdPhotos.forEach(function (photo) {
     fragment.appendChild(createPhotoELementFromTemplate(photo));
   });
 
@@ -328,3 +332,54 @@ renderPhotos(generatePhotos(PHOTOS_COUNT));
   }
 
 })();
+renderPhotos();
+
+function showBigPicture(photo) {
+  bigPicture.classList.remove('hidden');
+
+  bigPicture.querySelector('.social__comment-count')
+    .classList.add('hidden');
+  bigPicture.querySelector('.comments-loader')
+    .classList.add('hidden');
+
+  body.classList.add('modal-open');
+
+  bigPicture.querySelector('.big-picture__img img')
+    .src = photo.url;
+
+  bigPicture.querySelector('.likes-count')
+    .textContent = photo.likes;
+
+  bigPicture.querySelector('.comments-count')
+    .textContent = photo.comments.length;
+
+  bigPicture.querySelector('.social__caption')
+    .textContent = photo.description;
+}
+
+function renderComments(comments) {
+  var socialComments = document.querySelector('.social__comments');
+  var socialComment = socialComments.querySelector('.social__comment');
+  var fragment = document.createDocumentFragment();
+
+  comments.forEach(function (comment) {
+    fragment.appendChild(createNewComment(socialComment, comment));
+  });
+
+  socialComments.replaceWith(fragment);
+}
+
+function createNewComment(comment, commentData) {
+  var newComment = comment.cloneNode(true);
+  var avatar = newComment.querySelector('.social__picture');
+  var commentText = newComment.querySelector('.social__text');
+
+  avatar.src = commentData.avatar;
+  avatar.alt = commentData.name;
+  commentText.textContent = commentData.message;
+
+  return newComment;
+}
+
+showBigPicture(createdPhotos[0]);
+renderComments(createdPhotos[0].comments);
