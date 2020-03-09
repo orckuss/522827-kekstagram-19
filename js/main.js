@@ -92,13 +92,11 @@ function renderPhotos() {
   var fragment = document.createDocumentFragment();
 
   createdPhotos.forEach(function (photo) {
-    fragment.appendChild(createPhotoELementFromTemplate(photo));
+    fragment.append(createPhotoELementFromTemplate(photo));
   });
 
-  pictures.appendChild(fragment);
+  pictures.append(fragment);
 }
-
-renderPhotos(generatePhotos(PHOTOS_COUNT));
 
 // Открытие/закрытие формы, установка фильтров. Надо будет разбить и отрефакторить
 (function () {
@@ -332,6 +330,7 @@ renderPhotos(generatePhotos(PHOTOS_COUNT));
   }
 
 })();
+
 renderPhotos();
 
 function showBigPicture(photo) {
@@ -344,6 +343,15 @@ function showBigPicture(photo) {
 
   body.classList.add('modal-open');
 
+  renderBigPicture(photo);
+}
+
+function hideBigPicture() {
+  bigPicture.classList.add('hidden');
+  body.classList.remove('modal-open');
+}
+
+function renderBigPicture(photo) {
   bigPicture.querySelector('.big-picture__img img')
     .src = photo.url;
 
@@ -355,6 +363,8 @@ function showBigPicture(photo) {
 
   bigPicture.querySelector('.social__caption')
     .textContent = photo.description;
+
+  renderComments(photo.comments);
 }
 
 function renderComments(comments) {
@@ -363,10 +373,11 @@ function renderComments(comments) {
   var fragment = document.createDocumentFragment();
 
   comments.forEach(function (comment) {
-    fragment.appendChild(createNewComment(socialComment, comment));
+    fragment.append(createNewComment(socialComment, comment));
   });
 
-  socialComments.replaceWith(fragment);
+  socialComments.innerHTML = '';
+  socialComments.append(fragment);
 }
 
 function createNewComment(comment, commentData) {
@@ -381,5 +392,29 @@ function createNewComment(comment, commentData) {
   return newComment;
 }
 
-showBigPicture(createdPhotos[0]);
-renderComments(createdPhotos[0].comments);
+(function () {
+  var pictures = document.querySelectorAll('.picture');
+  var closeBtn = bigPicture.querySelector('.cancel');
+
+  pictures.forEach(function (picture, index) {
+    picture.addEventListener('click', function (evt) {
+      evt.preventDefault();
+      showBigPicture(createdPhotos[index]);
+      document.addEventListener('keydown', onEscPressed);
+    });
+  });
+
+  closeBtn.addEventListener('click', onCloseBtnClick);
+
+  function onCloseBtnClick() {
+    hideBigPicture();
+  }
+
+  function onEscPressed(evt) {
+    if (evt.key === 'Escape') {
+      hideBigPicture();
+      document.removeEventListener('keydown', onEscPressed);
+    }
+  }
+
+})();
