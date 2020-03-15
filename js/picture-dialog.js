@@ -42,6 +42,8 @@
     bigPictureImg.src = photo.url;
     bigPictureLikes.textContent = photo.likes;
     bigPictureDescription.textContent = photo.description;
+
+    window.pictureComments.render(photo.comments);
   }
 
 })();
