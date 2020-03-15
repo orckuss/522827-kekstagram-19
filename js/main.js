@@ -37,7 +37,7 @@ function generatePhotos(count) {
     photos.push({
       url: 'photos/' + i + '.jpg',
       description: 'description',
-      likes: getRandomNumberFromTo(MIN_LIKES, MAX_LIKES),
+      likes: window.utils.getRandomNumberFromTo(MIN_LIKES, MAX_LIKES),
       comments: generateComments(COMMENTS_COUNT),
     });
   }
@@ -50,22 +50,13 @@ function generateComments(count) {
 
   for (var i = 0; i < count; i++) {
     comments.push({
-      avatar: 'img/avatar-' + getRandomNumberFromTo(1, COMMENTS_AVATARS_COUNT) + '.svg',
-      message: getRandomFromMock(COMMENTS_MESSAGES_MOCK),
-      name: getRandomFromMock(COMMENTS_AUTHORS_MOCK),
+      avatar: 'img/avatar-' + window.utils.getRandomNumberFromTo(1, COMMENTS_AVATARS_COUNT) + '.svg',
+      message: window.utils.getRandomFromMock(COMMENTS_MESSAGES_MOCK),
+      name: window.utils.getRandomFromMock(COMMENTS_AUTHORS_MOCK),
     });
   }
 
   return comments;
-}
-
-function getRandomNumberFromTo(start, end) {
-  return Math.round(start + Math.random() * (end - start));
-}
-
-function getRandomFromMock(mock) {
-  var lastIndex = mock.length - 1;
-  return mock[Math.round(Math.random() * lastIndex)];
 }
 
 function createPhotoELementFromTemplate(photo) {
