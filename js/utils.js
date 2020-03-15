@@ -10,8 +10,15 @@
     return mock[Math.round(Math.random() * lastIndex)];
   }
 
+  function onEcsPressed(evt, action) {
+    if (evt.key === 'Escape') {
+      action();
+    }
+  }
+
   window.utils = {
     getRandomNumberFromTo: getRandomNumberFromTo,
     getRandomFromMock: getRandomFromMock,
+    onEcsPressed: onEcsPressed,
   };
 })();
