@@ -10,8 +10,11 @@
     return mock[Math.round(Math.random() * lastIndex)];
   }
 
-  function onEcsPressed(evt, action) {
-    if (evt.key === 'Escape') {
+  function onEcsPressed(evt, action, element) {
+    if (
+      (evt.key === 'Escape') &&
+      (evt.target !== element)
+    ) {
       action();
     }
   }
