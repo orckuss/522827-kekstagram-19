@@ -10,13 +10,19 @@
     return mock[Math.round(Math.random() * lastIndex)];
   }
 
-  function onEcsPressed(evt, action, element) {
+  function onEcsPressed(evt, action) {
     if (
       (evt.key === 'Escape') &&
-      (evt.target !== element)
+      (checkArguments(arguments, evt.target))
     ) {
       action();
     }
+  }
+
+  function checkArguments(args, value) {
+    return Array.prototype.every.call(args, function (item) {
+      return item !== value;
+    })
   }
 
   window.utils = {

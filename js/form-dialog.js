@@ -27,21 +27,14 @@
   }
 
   function closeEditForm() {
+    uploadFile.value = '';
     body.classList.remove('modal-open');
     editForm.classList.add('hidden');
     document.removeEventListener('keydown', onEscPressed);
   }
 
   function onEscPressed(evt) {
-    window.utils.onEcsPressed(evt, function () {
-      closeEditForm();
-      uploadFile.value = '';
-    }, hashTagField);
-
-    window.utils.onEcsPressed(evt, function () {
-      closeEditForm();
-      uploadFile.value = '';
-    }, commentsField);
+    window.utils.onEcsPressed(evt, closeEditForm, hashTagField, commentsField);
   }
 
 })();
