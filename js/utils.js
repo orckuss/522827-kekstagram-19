@@ -22,7 +22,7 @@
   function checkArguments(args, value) {
     return Array.prototype.every.call(args, function (item) {
       return item !== value;
-    })
+    });
   }
 
   window.utils = {
