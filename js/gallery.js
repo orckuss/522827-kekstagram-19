@@ -6,11 +6,27 @@
   var photoTemplate = document.querySelector('#picture')
     .content.querySelector('.picture');
 
-  window.data.photos.forEach(function (photo) {
-    fragment.append(createPhotoELementFromTemplate(photo));
-  });
+  window.http.get(onSuccess);
 
-  picturesContainer.append(fragment);
+  function onSuccess(response) {
+    renderPhotos(response);
+
+    document.querySelectorAll('.picture')
+      .forEach(function (picture, index) {
+        picture.addEventListener('click', function (evt) {
+          evt.preventDefault();
+          window.pictureDialog.show(response[index]);
+        });
+      });
+  }
+
+  function renderPhotos(photos) {
+    photos.forEach(function (photo) {
+      fragment.append(createPhotoELementFromTemplate(photo));
+    });
+
+    picturesContainer.append(fragment);
+  }
 
   function createPhotoELementFromTemplate(photo) {
     var photoElement = photoTemplate.cloneNode(true);
