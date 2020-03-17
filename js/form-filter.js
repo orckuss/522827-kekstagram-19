@@ -4,8 +4,6 @@
   var editForm = document.querySelector('.img-upload__overlay');
   var effectsRadio = editForm.querySelectorAll('.effects__radio');
   var imgPreview = editForm.querySelector('.img-upload__preview');
-  var effectSlider = editForm.querySelector('.img-upload__effect-level');
-  var effectLevelPin = effectSlider.querySelector('.effect-level__pin');
 
   var currentFilter;
 
@@ -13,7 +11,7 @@
     element.addEventListener('change', function (evt) {
       changeFilter('effects__preview--' + evt.target.value);
       setEffectIntensity(100);
-      setVisibilitySlider(element.id);
+      window.slider.setVisibility(element.id);
     });
   });
 
@@ -28,24 +26,6 @@
 
     currentFilter = filter;
   }
-
-  function setVisibilitySlider(effectName) {
-    if (effectSlider.classList.contains('hidden')) {
-      effectSlider.classList.remove('hidden');
-    }
-
-    if (effectName === 'effect-none') {
-      effectSlider.classList.add('hidden');
-    }
-  }
-
-  effectLevelPin.addEventListener('mouseup', function () {
-    var elementLeft = effectLevelPin.offsetLeft;
-    var parrentWidth = effectLevelPin.parentElement.offsetWidth;
-    var proportion = Math.round(elementLeft / parrentWidth * 100);
-
-    setEffectIntensity(proportion);
-  });
 
   function setEffectIntensity(proportion) {
     function checkFilter(filter) {
