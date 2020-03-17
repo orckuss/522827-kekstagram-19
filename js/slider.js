@@ -1,9 +1,12 @@
 'use strict';
 
 (function () {
+  var DEFAULT_VALUE = 100;
+
   var effectSlider = document.querySelector('.img-upload__effect-level');
   var effectLevelPin = effectSlider.querySelector('.effect-level__pin');
   var effectLevelDepth = effectSlider.querySelector('.effect-level__depth');
+  var effectLevelField = effectSlider.querySelector('.effect-level__value');
 
   var elementLeft;
   var parrentWidth;
@@ -52,6 +55,7 @@
     ) {
       effectLevelPin.style.left = elementLeft + 'px';
       effectLevelDepth.style.width = proportion + '%';
+      effectLevelField.value = proportion;
       window.formFilter.setEffectIntensity(proportion);
     }
   }
@@ -65,7 +69,8 @@
   function setDefault() {
     parrentWidth = effectLevelPin.parentElement.offsetWidth;
     effectLevelPin.style.left = parrentWidth + 'px';
-    effectLevelDepth.style.width = '100%';
+    effectLevelDepth.style.width = DEFAULT_VALUE + '%';
+    effectLevelField.value = DEFAULT_VALUE;
   }
 
   window.slider = {
