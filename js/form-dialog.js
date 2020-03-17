@@ -24,6 +24,8 @@
     body.classList.add('modal-open');
     editForm.classList.remove('hidden');
     document.addEventListener('keydown', onEscPressed);
+    window.formFilter.setDefault();
+    window.scale.setDefault();
   }
 
   function closeEditForm() {
