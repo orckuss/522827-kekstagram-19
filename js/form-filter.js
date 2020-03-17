@@ -15,6 +15,7 @@
       changeFilter('effects__preview--' + evt.target.value);
       setEffectIntensity(DEFAULT_INTENSITY);
       window.slider.setVisibility(element.id);
+      window.slider.setDefault();
     });
   });
 
@@ -22,6 +23,8 @@
     effectsRadio[0].checked = true;
     changeFilter('effects__preview--' + effectsRadio[0].value);
     setEffectIntensity(DEFAULT_INTENSITY);
+    window.slider.setVisibility(effectsRadio[0].id);
+    window.slider.setDefault();
   }
 
   function changeFilter(filter) {

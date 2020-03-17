@@ -3,6 +3,15 @@
 (function () {
   var effectSlider = document.querySelector('.img-upload__effect-level');
   var effectLevelPin = effectSlider.querySelector('.effect-level__pin');
+  var effectLevelDepth = effectSlider.querySelector('.effect-level__depth');
+
+  var elementLeft;
+  var parrentWidth;
+  var proportion;
+  var startCoords = {
+    x: 0,
+    y: 0,
+  };
 
   function setVisibility(effectName) {
     if (effectSlider.classList.contains('hidden')) {
@@ -14,16 +23,54 @@
     }
   }
 
-  effectLevelPin.addEventListener('mouseup', function () {
-    var elementLeft = effectLevelPin.offsetLeft;
-    var parrentWidth = effectLevelPin.parentElement.offsetWidth;
-    var proportion = Math.round(elementLeft / parrentWidth * 100);
+  effectLevelPin.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+    document.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
 
-    window.formFilter.setEffectIntensity(proportion);
+    startCoords.x = evt.clientX;
+    startCoords.y = evt.clientY;
   });
+
+  function onMouseMove(evt) {
+    evt.preventDefault();
+
+    var shift = {
+      x: startCoords.x - evt.clientX,
+      y: startCoords.x - evt.clientY,
+    };
+
+    startCoords.x = evt.clientX;
+    startCoords.y = evt.clientY;
+
+    elementLeft = effectLevelPin.offsetLeft - shift.x;
+    proportion = Math.round(elementLeft / parrentWidth * 100);
+
+    if (
+      (elementLeft > 0) &&
+      (elementLeft < parrentWidth)
+    ) {
+      effectLevelPin.style.left = elementLeft + 'px';
+      effectLevelDepth.style.width = proportion + '%';
+      window.formFilter.setEffectIntensity(proportion);
+    }
+  }
+
+  function onMouseUp(evt) {
+    evt.preventDefault();
+    document.removeEventListener('mousemove', onMouseMove);
+    window.removeEventListener('mouseup', onMouseUp);
+  }
+
+  function setDefault() {
+    parrentWidth = effectLevelPin.parentElement.offsetWidth;
+    effectLevelPin.style.left = parrentWidth + 'px';
+    effectLevelDepth.style.width = '100%';
+  }
 
   window.slider = {
     setVisibility: setVisibility,
+    setDefault: setDefault,
   };
 
 })();
