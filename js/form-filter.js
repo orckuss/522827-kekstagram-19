@@ -15,6 +15,11 @@
     });
   });
 
+  function setDefault() {
+    changeFilter('effects__preview--' + effectsRadio[0].value);
+    setEffectIntensity(100);
+  }
+
   function changeFilter(filter) {
     if (currentFilter) {
       imgPreview.classList.remove(currentFilter);
@@ -63,5 +68,10 @@
     }
 
   }
+
+  window.formFilter = {
+    setEffectIntensity: setEffectIntensity,
+    setDefault: setDefault,
+  };
 
 })();
