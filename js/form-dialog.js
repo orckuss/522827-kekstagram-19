@@ -40,6 +40,8 @@
 
   function closeEditForm() {
     uploadFile.value = '';
+    hashTagField.value = '';
+    commentsField.value = '';
     body.classList.remove('modal-open');
     editFormView.classList.add('hidden');
     document.removeEventListener('keydown', onEscPressed);
