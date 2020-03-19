@@ -15,11 +15,17 @@
 
   editForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    window.http.post(new FormData(editForm), onSuccess);
+    window.http.post(new FormData(editForm), onSuccess, onError);
   });
 
   function onSuccess() {
     closeEditForm();
+    window.notification.showSuccess();
+  }
+
+  function onError() {
+    closeEditForm();
+    window.notification.showError();
   }
 
   function onFileUpload() {
@@ -33,9 +39,9 @@
   function showEditForm() {
     body.classList.add('modal-open');
     editFormView.classList.remove('hidden');
-    document.addEventListener('keydown', onEscPressed);
     window.formFilter.setDefault();
     window.scale.setDefault();
+    document.addEventListener('keydown', onEscPressed);
   }
 
   function closeEditForm() {
