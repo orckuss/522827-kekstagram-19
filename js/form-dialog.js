@@ -20,12 +20,12 @@
 
   function onSuccess() {
     closeEditForm();
-    window.notification.showSuccess();
+    window.notification.show('success');
   }
 
   function onError() {
     closeEditForm();
-    window.notification.showError();
+    window.notification.show('error');
   }
 
   function onFileUpload() {
