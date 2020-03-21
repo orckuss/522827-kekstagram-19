@@ -23,23 +23,35 @@
 
   imgFilterDefault.addEventListener('click', function () {
     setActive(imgFilterDefault);
-    updatePhotos(photos);
-    setPictures(photos);
   });
+
+  imgFilterDefault.addEventListener('click', window.utils
+    .debounce(function () {
+      updatePhotos(photos);
+      setPictures(photos);
+    }));
 
   imgFilterRandom.addEventListener('click', function () {
     setActive(imgFilterRandom);
-    var randomPhotos = getRandomPhotos();
-    updatePhotos(randomPhotos);
-    setPictures(randomPhotos);
   });
+
+  imgFilterRandom.addEventListener('click', window.utils
+    .debounce(function () {
+      var randomPhotos = getRandomPhotos();
+      updatePhotos(randomPhotos);
+      setPictures(randomPhotos);
+    }));
 
   imgFilterDiscussed.addEventListener('click', function () {
     setActive(imgFilterDiscussed);
-    var discussedPhotos = getDiscussedPhotos();
-    updatePhotos(discussedPhotos);
-    setPictures(discussedPhotos);
   });
+
+  imgFilterDiscussed.addEventListener('click', window.utils
+    .debounce(function () {
+      var discussedPhotos = getDiscussedPhotos();
+      updatePhotos(discussedPhotos);
+      setPictures(discussedPhotos);
+    }));
 
   function setPictures(data) {
     pictures = document.querySelectorAll('.picture');
