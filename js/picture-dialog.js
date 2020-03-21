@@ -35,7 +35,7 @@
     bigPictureLikes.textContent = photo.likes;
     bigPictureDescription.textContent = photo.description;
 
-    window.pictureComments.render(photo.comments);
+    window.pictureComments.show(photo.comments);
   }
 
   window.pictureDialog = {
