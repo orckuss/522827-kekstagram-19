@@ -1,11 +1,14 @@
 'use strict';
 
 (function () {
+  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+
   var body = document.querySelector('body');
   var uploadFile = document.querySelector('#upload-file');
   var editForm = document.querySelector('.img-upload__form');
   var editFormView = editForm.querySelector('.img-upload__overlay');
   var closeBtn = editFormView.querySelector('#upload-cancel');
+  var imgPreview = editForm.querySelector('.img-upload__preview img');
 
   var hashTagField = document.querySelector('.text__hashtags');
   var commentsField = document.querySelector('.text__description');
@@ -30,6 +33,7 @@
 
   function onFileUpload() {
     showEditForm();
+    loadFile();
   }
 
   function onCloseButtonClick() {
@@ -55,6 +59,23 @@
 
   function onEscPressed(evt) {
     window.utils.onEcsPressed(evt, closeEditForm, hashTagField, commentsField);
+  }
+
+  function loadFile() {
+    var fileName = uploadFile.files[0].name.toLowerCase();
+
+    var matches = FILE_TYPES.some(function (type) {
+      return fileName.endsWith(type);
+    });
+
+    if (matches) {
+      var reader = new FileReader();
+
+      reader.addEventListener('load', function () {
+        imgPreview.src = reader.result;
+      });
+      reader.readAsDataURL(uploadFile.files[0]);
+    }
   }
 
 })();
