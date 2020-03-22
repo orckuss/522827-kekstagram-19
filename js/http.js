@@ -2,6 +2,7 @@
 
 (function () {
   var URL = 'https://js.dump.academy/kekstagram';
+  var STATUS_OK = 200;
 
   function get(onSuccess, onError) {
     var xhr = createRequest(onSuccess, onError, {
@@ -26,7 +27,7 @@
     xhr.responseType = options.type;
 
     xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
+      if (xhr.status === STATUS_OK) {
         onSuccess(xhr.response);
       } else {
         onError(xhr.status + xhr.statusText);
