@@ -26,14 +26,22 @@
     }
   }
 
-  effectLevelPin.addEventListener('mousedown', function (evt) {
+  function init() {
+    effectLevelPin.addEventListener('mousedown', onMouseDown);
+  }
+
+  function destroy() {
+    effectLevelPin.removeEventListener('mousedown', onMouseDown);
+  }
+
+  function onMouseDown(evt) {
     evt.preventDefault();
     document.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mouseup', onMouseUp);
 
     startCoords.x = evt.clientX;
     startCoords.y = evt.clientY;
-  });
+  }
 
   function onMouseMove(evt) {
     evt.preventDefault();
@@ -76,6 +84,8 @@
   window.slider = {
     setVisibility: setVisibility,
     setDefault: setDefault,
+    init: init,
+    destroy: destroy,
   };
 
 })();

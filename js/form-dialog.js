@@ -45,6 +45,7 @@
     editFormView.classList.remove('hidden');
     window.formFilter.setDefault();
     window.scale.setDefault();
+    window.slider.init();
     document.addEventListener('keydown', onEscPressed);
   }
 
@@ -54,6 +55,7 @@
     commentsField.value = '';
     body.classList.remove('modal-open');
     editFormView.classList.add('hidden');
+    window.slider.destroy();
     document.removeEventListener('keydown', onEscPressed);
   }
 
