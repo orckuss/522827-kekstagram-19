@@ -17,6 +17,7 @@
     body.classList.add('modal-open');
     bigPicture.classList.remove('hidden');
     render(photo);
+    window.pictureComments.init(photo.comments);
     document.addEventListener('keydown', onEscPressed);
   }
 
@@ -24,6 +25,7 @@
     body.classList.remove('modal-open');
     bigPicture.classList.add('hidden');
     document.removeEventListener('keydown', onEscPressed);
+    window.pictureComments.destroy();
   }
 
   function onEscPressed(evt) {
@@ -34,8 +36,6 @@
     bigPictureImg.src = photo.url;
     bigPictureLikes.textContent = photo.likes;
     bigPictureDescription.textContent = photo.description;
-
-    window.pictureComments.show(photo.comments);
   }
 
   window.pictureDialog = {
